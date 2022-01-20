@@ -1,0 +1,16 @@
+{
+    "env": {
+        "DATABASE_NAME": "sft_wbm",
+        "DATABASE_PASSWORD": "1996",
+        "DATABASE_USER": "postgres",
+        "DATABASE_HOST": "localhost",
+        "VAPID_PUBLIC": "BBLwzUbSqeOYvB9cunpebtRhvzn1S7npltzM5uuqd3fTosLzr-nW3geOW5KqVS_T3uXpO4ZelzZPzIkNT3mPPOQ",
+        "VAPID_PRIVATE": "p961x1BMwa41Jxt9O-VktLh9XRCdHjaPH4DvLKsWDpY",
+        "DATABASE_PORT": 5432,
+        "PORT": 5000,
+        "DATABASE_DIALECT": "postgres",
+        "HOST": "http://localhost:3000",
+        "PUBLIC_IP": "http://localhost:3000",
+        "JWT_KEY": "79d9f430-4860-11ec-9d51-0b3cb7324190"
+    }
+}
