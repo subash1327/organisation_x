@@ -1,6 +1,6 @@
 {
     "env": {
-        "DATABASE_NAME": "sft_wbm",
+        "DATABASE_NAME": "organisation_x",
         "DATABASE_PASSWORD": "1996",
         "DATABASE_USER": "postgres",
         "DATABASE_HOST": "localhost",
