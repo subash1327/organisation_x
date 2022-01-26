@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const handlers = require('./handlers')
 const user = require('./user/routes')
+const login = require('./login/routes')
 const check = require('./middlewares/check_token')
 const fs = require('fs')
 const path = require('path')
@@ -23,6 +24,7 @@ const storage_bucket = multer({ storage: bucket });
 router.post( '/upload' , storage_bucket.single('file'), handlers.upload )
 router.get( '/download/:file', handlers.download )
 router.use('/user', user)
+router.use('/login', login)
 router.post('/get/:name', handlers.get)
 router.post('/add/:name', handlers.add)
 router.post('/update/:name', handlers.update)
