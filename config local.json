@@ -9,8 +9,8 @@
         "DATABASE_PORT": 5432,
         "PORT": 5000,
         "DATABASE_DIALECT": "postgres",
-        "HOST": "http://localhost:3000",
-        "PUBLIC_IP": "http://localhost:3000",
+        "HOST": "http://localhost:5000",
+        "PUBLIC_IP": "http://localhost:5000",
         "JWT_KEY": "79d9f430-4860-11ec-9d51-0b3cb7324190"
     }
 }

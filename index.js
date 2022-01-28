@@ -4,10 +4,15 @@ var bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs')
-global.local = false
+global.local = true
 const env_path = path.join(__dirname, local ? 'config local.json' : 'config.json')
 global.env = JSON.parse(fs.readFileSync(env_path))
 const knex = require('./knex')
+global.admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 const routes = require('./routes')
 

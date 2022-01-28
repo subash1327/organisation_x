@@ -25,10 +25,12 @@ router.post( '/upload' , storage_bucket.single('file'), handlers.upload )
 router.get( '/download/:file', handlers.download )
 router.use('/user', user)
 router.use('/login', login)
+router.post('/send_notification', handlers.send_notification)
 router.post('/get/:name', handlers.get)
 router.post('/add/:name', handlers.add)
 router.post('/update/:name', handlers.update)
 router.post('/delete/:name', handlers.delete)
 router.get('/lang/:code',  handlers.lang)
+setInterval(handlers.timer10, 600000);
 
 module.exports = router;

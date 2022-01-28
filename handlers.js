@@ -6,13 +6,13 @@ exports.get = async (req, res) => {
     let table = req.params.name
     let query = knex.knex(table)
 
-    if(joins)
-        query = query.join(join, 
+    if (joins)
+        query = query.join(join,
             b => {
                 joins.forEach(e => {
                     let ee = [];
                     e.forEach(f => {
-                        if(typeof f === "string"){
+                        if (typeof f === "string") {
                             ee.push(f)
                         } else {
                             ee.push(knex.knex.raw('?', f))
@@ -22,22 +22,22 @@ exports.get = async (req, res) => {
                 });
             }
         )
-    
-    if(fields)
+
+    if (fields)
         query = query.select(...fields)
     else
         query = query.select('*')
 
-    if(queries){
+    if (queries) {
         query = query.where(b => {
             queries.forEach(e => {
                 b.where(...e);
             });
         })
-        
+
     }
 
-    if(raw){
+    if (raw) {
         query = query.whereRaw(raw)
     }
 
@@ -51,11 +51,11 @@ exports.get = async (req, res) => {
     }
     try {
         let data = await query.limit(limit || 1000).offset(offset || 0)
-    res.send({
-        success: true,
-        message: 'Successfully fetched',
-        data: data
-    })
+        res.send({
+            success: true,
+            message: 'Successfully fetched',
+            data: data
+        })
     } catch (error) {
         console.log(error)
         res.send({
@@ -63,7 +63,7 @@ exports.get = async (req, res) => {
             message: 'Failed',
         })
     }
-    
+
 }
 
 
@@ -101,10 +101,10 @@ exports.update = async (req, res) => {
     let table = req.params.name
     try {
         var result;
-            
-        if(data.id){
+
+        if (data.id) {
             result = await knex.knex(table).update(data, 'id').where((q) => q.where('id', '=', data.id))
-        } else if(queries){
+        } else if (queries) {
             result = await knex.knex(table).update(data, 'id').where(b => {
                 queries.forEach(e => {
                     b.where(...e);
@@ -133,21 +133,75 @@ exports.update = async (req, res) => {
     }
 }
 
+exports.timer10 = async () => {
+    let start = await knex.select('shift_start_view')
+    if (start) {
+        let tokens = []
+        start.forEach((e) => { tokens.push(e.token) })
+        this.send_notification({
+            body: {
+                token: tokens,
+                title: 'Your shift is going to Start',
+                body: 'Your shift is going to Start, Tap to open the App'
+            }
+        }, {
+            send: (r) => {
+                console.log(r)
+            }
+        })
+    }
+    let end = await knex.select('shift_end_view')
+    console.log(end)
+}
+
+exports.send_notification = (req, res) => {
+    const notification_options = {
+        priority: "high",
+        timeToLive: 60 * 60 * 24
+    };
+
+    const token = req.body.token
+    const message = {
+        notification: {
+            title: req.body.title,
+            body: req.body.body
+        }
+    }
+    const options = notification_options
+
+    try {
+        admin.messaging().sendToDevice(token, message, options)
+        .then(response => {
+            res.send({
+                'success': true,
+                'message': 'Successfully Sent',
+            })
+        })
+    } catch (error) {
+        res.send({
+            success: false,
+            message: 'Failed to Send',
+            error: error.message
+        })
+    }
+    
+}
+
 exports.delete = async (req, res) => {
     let data = req.body.data
     let queries = req.body.queries
     let table = req.params.name
     try {
-        if(data.id){
+        if (data.id) {
             let result = await knex.knex(table).delete().where((q) => q.where('id', '=', data.id))
-        } else if(queries){
+        } else if (queries) {
             let result = await knex.knex(table).delete().where(b => {
                 queries.forEach(e => {
                     b.where(...e);
                 });
             })
         }
-        
+
         res.send({
             success: true,
             message: 'Successfully Deleted',
