@@ -4,7 +4,7 @@ var bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs')
-global.local = true
+global.local = false
 const cluster = require("cluster");
 const cpus = require("os").cpus().length;
 const env_path = path.join(__dirname, local ? 'config local.json' : 'config.json')
@@ -19,7 +19,7 @@ const routes = require('./routes')
 const PORT = process.env.PORT || 5000
 const app = express()
 global.socket = require('./socket/socket');
-//const redis = require('./socket/redis')
+const redis = require('./socket/redis')
 const io = socket.io;
 app.use(cors())
 app.use(bodyParser.json())
