@@ -1,6 +1,7 @@
-var socket_io = require('socket.io');
-var io = socket_io();
-var socketApi = {};
+const socket_io = require('socket.io');
+const io = socket_io();
+const socketApi = {};
+
 
 socketApi.io = io;
 
@@ -8,7 +9,7 @@ let sites = {}
 let users = {}
 
 io.on('connection', socket => {
-    console.log(`connected - ${socket.id}`)
+    console.log(`${process.pid} - connected - ${socket.id}`)
     
     socket.on('disconnect', () => {
         console.warn(`disconnected - ${socket.id}`)

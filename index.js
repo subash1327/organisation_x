@@ -4,7 +4,9 @@ var bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs')
-global.local = false
+global.local = true
+const cluster = require("cluster");
+const cpus = require("os").cpus().length;
 const env_path = path.join(__dirname, local ? 'config local.json' : 'config.json')
 global.env = JSON.parse(fs.readFileSync(env_path))
 const knex = require('./knex')
@@ -13,23 +15,33 @@ const serviceAccount = require('./serviceAccountKey.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-
 const routes = require('./routes')
-
 const PORT = process.env.PORT || 5000
-
 const app = express()
 global.socket = require('./socket/socket');
-
+//const redis = require('./socket/redis')
 const io = socket.io;
-
 app.use(cors())
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/api/v1', routes)
 app.use(express.static('public'))
 
+
+if (cluster.isMaster) {
+ console.log(`Number of CPUs is ${cpus}`);
+ console.log(`Master ${process.pid} is running`);
+
+  for (let i = 0; i < cpus; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+    console.log("Let's fork another worker!");
+    cluster.fork();
+  });
+} else {
 const server = http.createServer(app)
 io.attach(server, {
     pingInterval: 10000,
@@ -37,5 +49,6 @@ io.attach(server, {
     cookie: false
   });
 server.listen(PORT, () => {
-  console.log('Server Started')
+  console.log(`Server Started - ${process.pid}`)
 })
+}

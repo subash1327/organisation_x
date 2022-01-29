@@ -1,9 +1,42 @@
 const knex = require('./knex')
+let Country = require('country-state-city').Country;
+let State = require('country-state-city').State;
+let City = require('country-state-city').City;
 // const db = require('./db')
 
 exports.get = async (req, res) => {
-    let { order_by, order, search_by, search, limit, offset, queries, raw, fields, join, joins } = req.body
+    let { order_by, order, search_by, search, limit, offset, queries, raw, fields, join, joins, country, state } = req.body
     let table = req.params.name
+
+    if(table === 'country'){
+        let c = await Country.getAllCountries()
+        res.send({
+            success: true,
+            message: 'Successfully fetched',
+            data: c
+        })
+        return;
+    }
+    if(table === 'state'){
+        let c = await State.getStatesOfCountry(country)
+        res.send({
+            success: true,
+            message: 'Successfully fetched',
+            data: c
+        })
+        return;
+    }
+
+    if(table === 'city'){
+        let c = await City.getCitiesOfState(country, state)
+        res.send({
+            success: true,
+            message: 'Successfully fetched',
+            data: c
+        })
+        return;
+    }
+
     let query = knex.knex(table)
 
     if (joins)
