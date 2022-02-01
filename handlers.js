@@ -264,6 +264,10 @@ exports.upload = (req, res) => {
     }
 }
 
+exports.body_test = (req, res) => {
+    console.log('body test')
+    console.log(res.body)
+}
 exports.download = (req, res) => {
     res.download(`./bucket/${req.params.file}`)
 }
