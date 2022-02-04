@@ -4,6 +4,8 @@ const handlers = require('./handlers')
 const check = require('../middlewares/check_token')
 
 router.post('/add',check ,handlers.add)
+router.post('/getqr', handlers.getqr)
+router.post('/verifyqr', handlers.verifyqr)
 router.get('/me',check, handlers.me)
 router.post('/login', handlers.login)
 //router.post('/login_with_email', handlers.login_with_email)

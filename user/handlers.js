@@ -1,6 +1,7 @@
 // const db = require('../db')
 const knex = require('../knex')
 const jwt = require('jsonwebtoken')
+const date = require('date-and-time')
 
 exports.add = async (req, res) => {
     let { id, name, login, hash, role, permissions} = req.body.user
@@ -132,4 +133,48 @@ exports.me = async (req, res) => {
     }
 }
 
+exports.getqr = async (req, res) => {
+    let data = await knex.select('user', {
+        conditions: [
+            ['id', '=', '33'],
+        ]
+    })
+    if (data.length > 0) {
+        const token = jwt.sign(data[0], env.env.JWT_KEY, { expiresIn: '1m' })
+        res.send({
+            'success': true,
+            'message': 'Successfull',
+            'token': token
+        })
+        return;
+    } else {
+        res.send({
+            'success': false,
+            'message': 'User not found'
+        })
+    }
+}
+
+exports.verifyqr = async (req, res) => {
+    try {
+        let data = jwt.verify(req.body.token, env.env.JWT_KEY)
+        if(data){
+            res.send({
+                'success': true,
+                'message': 'Verified'
+            })
+        }
+    } catch (e) {
+        res.send({
+            'success': false,
+            'message': 'Failed to Verify'
+        })
+    }
+}
+
+exports.getJWTKey = () => {
+    let salt = new Date();
+    let value = date.format(salt,'YYYY/MM/DD HH:mm');
+    return `${env.env.JWT_KEY}${value}`;
+}
 
