@@ -2,6 +2,6 @@ steps:
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     args:
       - '-c'
-      - gcloud beta run deploy stage --source . --platform managed
+      - gcloud beta run deploy stage --source . --platform managed --region us-central1
     entrypoint: bash
 timeout: 1600s
