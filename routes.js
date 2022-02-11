@@ -14,7 +14,7 @@ const multer = Multer({
       fileSize: 5 * 1024 * 1024, // no larger than 5mb, you can change as needed.
     },
   });
-router.post( '/upload' , multer.single('file'), handlers.upload )
+router.post( '/upload/:path' , multer.single('file'), handlers.upload )
 router.get( '/download/:file', handlers.download )
 router.use('/user', user)
 router.use('/login', login)
