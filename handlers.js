@@ -2,6 +2,7 @@ const knex = require('./knex')
 let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
+
 const Storage = require('@google-cloud/storage').Storage;
 const storage = new Storage();
 const bucket = storage.bucket('fiosource');

@@ -14,6 +14,9 @@ global.env = JSON.parse(fs.readFileSync(env_path))
 const knex = require('./knex')
 global.admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
+const pubsub = require('@google-cloud/pubsub').PubSub;
+
+const pubsubClient = local ? null : new pubsub();
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
@@ -23,6 +26,11 @@ const app = express()
 global.socket = require('./socket/socket');
 //const redis = require('./socket/redis')
 const io = socket.io;
+
+const pubsubAdapter = require('socket.io-pubsub');
+if(!local)
+io.adapter(pubsubAdapter(pubsubClient));
+
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
