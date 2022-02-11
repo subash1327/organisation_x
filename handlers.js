@@ -275,9 +275,8 @@ exports.upload = (req, res) => {
     
         blobStream.on('finish', () => {
             console.log('finish upload')
-            const publicUrl = format(
-                `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-            );
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+
             console.log(`url: ${publicUrl}`)
             res.send({
                 'success': true,

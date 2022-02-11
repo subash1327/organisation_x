@@ -6,22 +6,15 @@ const login = require('./login/routes')
 const check = require('./middlewares/check_token')
 const fs = require('fs')
 const path = require('path')
-const multer  = require('multer')
+const Multer = require('multer')
 
-var bucket = multer.diskStorage({
-    destination: (req, file, cb) => {
-        var storagePath = './bucket/';
-        if (!fs.existsSync(storagePath)) {
-            fs.mkdirSync(storagePath);
-        }
-        cb(null, storagePath);
+const multer = Multer({
+    storage: Multer.memoryStorage(),
+    limits: {
+      fileSize: 5 * 1024 * 1024, // no larger than 5mb, you can change as needed.
     },
-    filename: (req, file, cb) => {
-        cb(null,  Date.now() + file.originalname);
-    }
-});
-const storage_bucket = multer({ storage: bucket });
-router.post( '/upload' , storage_bucket.single('file'), handlers.upload )
+  });
+router.post( '/upload' , multer.single('file'), handlers.upload )
 router.get( '/download/:file', handlers.download )
 router.use('/user', user)
 router.use('/login', login)
