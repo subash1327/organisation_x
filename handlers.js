@@ -3,6 +3,7 @@ let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
 const Storage = require('@google-cloud/storage').Storage;
+const storage = new Storage();
 const bucket = storage.bucket('fiosource');
 
 exports.get = async (req, res) => {
@@ -250,7 +251,7 @@ exports.delete = async (req, res) => {
 }
 
 
-const storage = new Storage();
+
 exports.upload = (req, res) => {
     try {
         if (!req.file) {
