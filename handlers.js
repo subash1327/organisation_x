@@ -264,6 +264,7 @@ exports.upload = (req, res) => {
     
         console.log(req.file.originalname)
         console.log(req.file.filename)
+        console.log(req.body.path)
     
         const blob = bucket.file(`${req.body.path || ''}/${req.file.originalname}`);
         const blobStream = blob.createWriteStream();
