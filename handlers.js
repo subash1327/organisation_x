@@ -2,7 +2,8 @@ const knex = require('./knex')
 let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
-// const db = require('./db')
+const Storage = require('@google-cloud/storage').Storage;
+const bucket = storage.bucket('fiosource');
 
 exports.get = async (req, res) => {
     let { order_by, order, search_by, search, limit, offset, queries, raw, fields, join, joins, country, state } = req.body
@@ -248,20 +249,36 @@ exports.delete = async (req, res) => {
     }
 }
 
-exports.upload = (req, res) => {
 
-    if (req.file) {
-        res.send({
-            'success': true,
-            'message': 'Successfully Uploaded',
-            'url': env.env.HOST + `/api/v1/download/${req.file.filename}`
-        })
-    } else {
+const storage = new Storage();
+exports.upload = (req, res) => {
+    if (!req.file) {
         res.send({
             'success': false,
             'message': 'Failed Uploaded',
         })
-    }
+        return;
+      }
+    
+      const blob = bucket.file(req.file.originalname);
+      const blobStream = blob.createWriteStream();
+    
+      blobStream.on('error', err => {
+        next(err);
+      });
+    
+      blobStream.on('finish', () => {
+        const publicUrl = format(
+            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+          );
+        res.send({
+            'success': true,
+            'message': 'Successfully Uploaded',
+            'url': publicUrl
+        })
+      });
+    
+      blobStream.end(req.file.buffer);
 }
 
 exports.body_test = (req, res) => {
