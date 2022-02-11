@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express')
 const http = require('http')
 var bodyParser = require('body-parser')
@@ -16,7 +18,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 const routes = require('./routes')
-const PORT = process.env.PORT || 5000
+const PORT = parseInt(process.env.PORT) || 8080;
 const app = express()
 global.socket = require('./socket/socket');
 //const redis = require('./socket/redis')
@@ -26,29 +28,40 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/api/v1', routes)
 app.use(express.static('public'))
-
-
-if (cluster.isMaster) {
- console.log(`Number of CPUs is ${cpus}`);
- console.log(`Master ${process.pid} is running`);
-
-  for (let i = 0; i < cpus; i++) {
-    cluster.fork();
-  }
-
-  cluster.on("exit", (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid} died`);
-    console.log("Let's fork another worker!");
-    cluster.fork();
-  });
-} else {
-const server = http.createServer(app)
+app.enable('trust proxy');
+const server = http.Server(app)
 io.attach(server, {
     pingInterval: 10000,
     pingTimeout: 5000,
     cookie: false
   });
-server.listen(PORT, () => {
-  console.log(`Server Started - ${process.pid}`)
-})
-}
+  server.listen(PORT, () => {
+    console.log(`Server Started`)
+  })
+
+module.exports = server;
+
+// if (cluster.isMaster) {
+//  console.log(`Number of CPUs is ${cpus}`);
+//  console.log(`Master ${process.pid} is running`);
+
+//   for (let i = 0; i < cpus; i++) {
+//     cluster.fork();
+//   }
+
+//   cluster.on("exit", (worker, code, signal) => {
+//     console.log(`worker ${worker.process.pid} died`);
+//     console.log("Let's fork another worker!");
+//     cluster.fork();
+//   });
+// } else {
+//   const server = http.createServer(app)
+//   io.attach(server, {
+//       pingInterval: 10000,
+//       pingTimeout: 5000,
+//       cookie: false
+//     });
+//   server.listen(PORT, () => {
+//     console.log(`Server Started`)
+//   })
+// }

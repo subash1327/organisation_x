@@ -1,0 +1,14 @@
+runtime: nodejs16
+env: standard
+
+manual_scaling:
+  instances: 1
+
+env_variables:
+  DB_USER: MY_DB_USER
+  DB_PASS: MY_DB_PASSWORD
+  DB_NAME: MY_DATABASE
+  INSTANCE_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>
+
+network:
+  session_affinity: true

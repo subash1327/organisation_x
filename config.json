@@ -1,9 +1,9 @@
 {
     "env": {
-        "DATABASE_NAME": "gsukxkau",
-        "DATABASE_PASSWORD": "x2gacFmuFcRnZNWfH5lePm9trE_N2TzB",
-        "DATABASE_USER": "gsukxkau",
-        "DATABASE_HOST": "otto.db.elephantsql.com",
+        "DATABASE_NAME": "fiosource",
+        "DATABASE_PASSWORD": "JR*6YCDo",
+        "DATABASE_USER": "postgres",
+        "DATABASE_HOST": "104.154.221.44",
         "VAPID_PUBLIC": "BBLwzUbSqeOYvB9cunpebtRhvzn1S7npltzM5uuqd3fTosLzr-nW3geOW5KqVS_T3uXpO4ZelzZPzIkNT3mPPOQ",
         "VAPID_PRIVATE": "p961x1BMwa41Jxt9O-VktLh9XRCdHjaPH4DvLKsWDpY",
         "DATABASE_PORT": 5432,
