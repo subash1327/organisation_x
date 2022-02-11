@@ -113,7 +113,7 @@ exports.add = async (req, res) => {
             res.send({
                 success: true,
                 message: 'Successfully Added',
-                id: result[0]
+                id: result[0]['id']
             })
         } else {
             res.send({
@@ -151,7 +151,7 @@ exports.update = async (req, res) => {
             res.send({
                 success: true,
                 message: 'Successfully Updated',
-                id: result[0]
+                id: result[0]['id']
             })
         } else {
             res.send({
