@@ -9,7 +9,7 @@ exports.get = async (req, res) => {
     let { order_by, order, search_by, search, limit, offset, queries, raw, fields, join, joins, country, state } = req.body
     let table = req.params.name
 
-    if(table === 'country'){
+    if (table === 'country') {
         let c = await Country.getAllCountries()
         res.send({
             success: true,
@@ -18,7 +18,7 @@ exports.get = async (req, res) => {
         })
         return;
     }
-    if(table === 'state'){
+    if (table === 'state') {
         let c = await State.getStatesOfCountry(country)
         res.send({
             success: true,
@@ -28,7 +28,7 @@ exports.get = async (req, res) => {
         return;
     }
 
-    if(table === 'city'){
+    if (table === 'city') {
         let c = await City.getCitiesOfState(country, state)
         res.send({
             success: true,
@@ -205,12 +205,12 @@ exports.send_notification = (req, res) => {
 
     try {
         admin.messaging().sendToDevice(token, message, options)
-        .then(response => {
-            res.send({
-                'success': true,
-                'message': 'Successfully Sent',
+            .then(response => {
+                res.send({
+                    'success': true,
+                    'message': 'Successfully Sent',
+                })
             })
-        })
     } catch (error) {
         res.send({
             success: false,
@@ -218,7 +218,7 @@ exports.send_notification = (req, res) => {
             error: error.message
         })
     }
-    
+
 }
 
 exports.delete = async (req, res) => {
@@ -252,33 +252,47 @@ exports.delete = async (req, res) => {
 
 const storage = new Storage();
 exports.upload = (req, res) => {
-    if (!req.file) {
+    try {
+        if (!req.file) {
+            res.send({
+                'success': false,
+                'message': 'Failed Uploaded',
+            })
+            return;
+        }
+    
+        console.log(req.file.originalname)
+        console.log(req.file.filename)
+    
+        const blob = bucket.file(req.file.originalname);
+        const blobStream = blob.createWriteStream();
+    
+        blobStream.on('error', err => {
+            console.log('error upload')
+            next(err);
+        });
+    
+        blobStream.on('finish', () => {
+            console.log('finish upload')
+            const publicUrl = format(
+                `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+            );
+            console.log(`url: ${publicUrl}`)
+            res.send({
+                'success': true,
+                'message': 'Successfully Uploaded',
+                'url': publicUrl
+            })
+        });
+    
+        blobStream.end(req.file.buffer);
+    } catch (error) {
+        console.log(error)
         res.send({
             'success': false,
-            'message': 'Failed Uploaded',
+            'message': `Failed Uploaded ${error.message}`,
         })
-        return;
-      }
-    
-      const blob = bucket.file(req.file.originalname);
-      const blobStream = blob.createWriteStream();
-    
-      blobStream.on('error', err => {
-        next(err);
-      });
-    
-      blobStream.on('finish', () => {
-        const publicUrl = format(
-            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-          );
-        res.send({
-            'success': true,
-            'message': 'Successfully Uploaded',
-            'url': publicUrl
-        })
-      });
-    
-      blobStream.end(req.file.buffer);
+    }
 }
 
 exports.body_test = (req, res) => {
