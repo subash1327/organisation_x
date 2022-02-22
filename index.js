@@ -6,10 +6,10 @@ var bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs')
-global.local = false
+global.local = true
 const cluster = require("cluster");
 const cpus = require("os").cpus().length;
-const env_path = path.join(__dirname, local ? 'config local.json' : 'config.json')
+const env_path = path.join(__dirname, local ? 'config.json' : 'config.json')
 global.env = JSON.parse(fs.readFileSync(env_path))
 const knex = require('./knex')
 global.admin = require('firebase-admin');
@@ -21,6 +21,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 const routes = require('./routes')
+const routesv2 = require('./v2/routes')
 const PORT = parseInt(process.env.PORT) || 8080;
 const app = express()
 global.socket = require('./socket/socket');
@@ -35,6 +36,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/api/v1', routes)
+app.use('/api/v2', routesv2)
 app.use(express.static('public'))
 app.enable('trust proxy');
 const server = http.Server(app)
