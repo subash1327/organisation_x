@@ -40,7 +40,12 @@ exports.get = async (req, res) => {
         return;
     }
 
-    let query = knex.knex(table)
+    var query;
+
+    if(table.includes('('))
+       query = knex.knex(knex.knex.raw(table))
+    else
+       query = knex.knex(table)
 
     if (joins)
         query = query.join(join,
