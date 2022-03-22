@@ -12,12 +12,12 @@ let users = {}
 io.on('connection', socket => {
     console.log(`${process.pid} - connected - ${socket.id}`)
     
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.warn(`disconnected - ${socket.id}`)
         let data = users[socket.id]
         if(data){
             io.emit(`org::${data.org.id}::offline`, data.user)
-            knex.update('con_stat', {
+            await knex.update('con_stat', {
                 fields: {
                     alive: false,
                     date: 'NOW()'
@@ -38,7 +38,7 @@ io.on('connection', socket => {
         users[socket.id] = data
         io.emit(`org::${data.org.id}::online`, data.user)
         try {
-            knex.update('con_stat', {
+            await knex.update('con_stat', {
                 fields: {
                     alive: true,
                     date: 'NOW()'
@@ -48,7 +48,7 @@ io.on('connection', socket => {
                 ]
             })
         } catch (e) {
-            knex.insert('con_stat', {
+            await knex.insert('con_stat', {
                 uid: data.user.id,
                 oid: data.org.id
             })
