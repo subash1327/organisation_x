@@ -38,6 +38,11 @@ io.on('connection', socket => {
         users[socket.id] = data
         io.emit(`org::${data.org.id}::online`, data.user)
         try {
+            await knex.insert('con_stat', {
+                uid: data.user.id,
+                oid: data.org.id
+            })
+        } catch (e) {
             await knex.update('con_stat', {
                 fields: {
                     alive: true,
@@ -46,11 +51,6 @@ io.on('connection', socket => {
                 conditions: [
                     ['uid', '=', data.user.id]
                 ]
-            })
-        } catch (e) {
-            await knex.insert('con_stat', {
-                uid: data.user.id,
-                oid: data.org.id
             })
         }
     });
