@@ -31,7 +31,10 @@ io.on('connection', socket => {
         
     });
     
-    socket.on('online', async (data) => {
+    socket.on('online', async (j) => {
+        console.log(j)
+        let data = JSON.parse(j)
+        console.log(data)
         users[socket.id] = data
         io.emit(`org::${data.org.id}::online`, data.user)
         try {
