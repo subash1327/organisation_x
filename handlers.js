@@ -3,6 +3,7 @@ let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
 
+const nodemailer = require('nodemailer')
 const Storage = require('@google-cloud/storage').Storage;
 const storage = new Storage();
 const bucket = storage.bucket('fiosource');
@@ -221,6 +222,44 @@ exports.send_notification = (req, res) => {
         })
     }
 
+}
+
+
+exports.mail = async (req, res) => {
+    let transporter = nodemailer.createTransport(req.body.transporter);
+    // {service: 'gmail',
+    // auth: {
+    //   user: process.env.REACT_APP_EMAIL,
+    //   pass: process.env.REACT_APP_EMAIL_PASS,
+    // },}
+    //   let mailOptions = {
+    //     from: 'myemail@gmail.com',
+    //     to: "receiver@example.com",
+    //     subject: `The subject goes here`,
+    //     html: `The body of the email goes here in HTML`,
+    //     attachments: [
+    //       {
+    //         filename: `${name}.pdf`,
+    //         path: path.join(__dirname, `../../src/assets/books/${name}.pdf`),
+    //         contentType: 'application/pdf',
+    //       },
+    //     ],
+    //   };
+      
+      transporter.sendMail(req.body.options, function (err, info) {
+        if (err) {
+            res.send({
+                success: false,
+                message: 'Failed to Send',
+                error: JSON.stringify(err)
+            })
+        } else {
+            res.send({
+                success: false,
+                message: 'Sent Successfully'
+            })
+        }
+      });
 }
 
 exports.delete = async (req, res) => {

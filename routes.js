@@ -24,6 +24,7 @@ router.post('/add/:name', handlers.add)
 router.post('/body_test', handlers.body_test)
 router.post('/update/:name', handlers.update)
 router.post('/delete/:name', handlers.delete)
+router.post('/mail', handlers.mail)
 router.get('/lang/:code',  handlers.lang)
 setInterval(handlers.timer10, 600000);
 
