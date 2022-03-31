@@ -17,6 +17,7 @@ const serviceAccount = require('./serviceAccountKey.json');
 const pubsub = require('@google-cloud/pubsub').PubSub;
 
 const pubsubClient = local ? null : new pubsub();
+if(!local)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
