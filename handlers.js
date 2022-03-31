@@ -338,7 +338,7 @@ exports.upload = (req, res) => {
 }
 
 exports.gen_pdf = (req, res) => {
-    htmlpdf.create(req.body.html, req.body.options, function(err, buffer){
+    pdf.create(req.body.html, req.body.options).toBuffer(function(err, buffer){
         if(err){
             console.log(err)
         }
