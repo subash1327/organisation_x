@@ -3,6 +3,7 @@ let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
 
+const htmlpdf = require('html-pdf')
 const nodemailer = require('nodemailer')
 const Storage = require('@google-cloud/storage').Storage;
 const storage = new Storage();
@@ -334,6 +335,50 @@ exports.upload = (req, res) => {
             'message': `Failed Uploaded ${error.message}`,
         })
     }
+}
+
+exports.gen_pdf = (req, res) => {
+    htmlpdf.create(req.body.html, req.body.options, function(err, buffer){
+        if(err){
+            res.send({
+                'error': err,
+                'success': false,
+                'message': `Failed Gen`,
+            })
+            return;
+        }
+        try {
+            
+        
+            const blob = bucket.file(`${req.body.path}`);
+            const blobStream = blob.createWriteStream();
+        
+            blobStream.on('error', err => {
+                console.log('error upload')
+                next(err);
+            });
+        
+            blobStream.on('finish', () => {
+                console.log('finish upload')
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+    
+                console.log(`url: ${publicUrl}`)
+                res.send({
+                    'success': true,
+                    'message': 'Successfully Uploaded',
+                    'url': publicUrl
+                })
+            });
+        
+            blobStream.end(buffer);
+        } catch (error) {
+            console.log(error)
+            res.send({
+                'success': false,
+                'message': `Failed Uploaded ${error.message}`,
+            })
+        }
+    });
 }
 
 exports.body_test = (req, res) => {
