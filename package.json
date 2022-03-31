@@ -23,6 +23,7 @@
     "date-and-time": "^2.1.0",
     "express": "^4.17.1",
     "firebase-admin": "^10.0.2",
+    "html-pdf": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "1.0.0",
     "multer": "^1.4.4",
