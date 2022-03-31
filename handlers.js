@@ -344,7 +344,6 @@ exports.gen_pdf = (req, res) => {
         }
         try {
             
-        
             const blob = bucket.file(`${req.body.path}`);
             const blobStream = blob.createWriteStream();
         
