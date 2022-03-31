@@ -3,7 +3,7 @@ let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
 
-const htmlpdf = require('html-pdf')
+const htmlpdf = require('html-pdf-node')
 const nodemailer = require('nodemailer')
 const Storage = require('@google-cloud/storage').Storage;
 const storage = new Storage();
@@ -338,10 +338,11 @@ exports.upload = (req, res) => {
 }
 
 exports.gen_pdf = (req, res) => {
-    pdf.create(req.body.html, req.body.options).toBuffer(function(err, buffer){
-        if(err){
-            console.log(err)
-        }
+    let options = { format: 'A4' };
+    htmlpdf.generatePdf({content: req.body.html}, options).then(function(pdfBuffer){
+        // if(err){
+        //     console.log(err)
+        // }
         try {
             
             const blob = bucket.file(`${req.body.path}`);
@@ -364,7 +365,7 @@ exports.gen_pdf = (req, res) => {
                 })
             });
         
-            blobStream.end(buffer);
+            blobStream.end(pdfBuffer);
         } catch (error) {
             console.log(error)
             res.send({
