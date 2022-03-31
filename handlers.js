@@ -340,12 +340,7 @@ exports.upload = (req, res) => {
 exports.gen_pdf = (req, res) => {
     htmlpdf.create(req.body.html, req.body.options, function(err, buffer){
         if(err){
-            res.send({
-                'error': err,
-                'success': false,
-                'message': `Failed Gen`,
-            })
-            return;
+            console.log(err)
         }
         try {
             
