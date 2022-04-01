@@ -16,6 +16,7 @@
   "dependencies": {
     "@google-cloud/pubsub": "^2.18.5",
     "@google-cloud/storage": "^5.18.1",
+    "axios": "^0.26.1",
     "body-parser": "^1.19.0",
     "cluster": "^0.7.7",
     "cors": "^2.8.5",

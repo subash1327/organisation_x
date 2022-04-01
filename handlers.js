@@ -2,7 +2,7 @@ const knex = require('./knex')
 let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
-
+const axios = require("axios").create({baseUrl: "http://35.192.168.88:8080/api/v1/"});
 const htmlpdf = require('html-pdf')
 const nodemailer = require('nodemailer')
 const Storage = require('@google-cloud/storage').Storage;
@@ -337,12 +337,23 @@ exports.upload = (req, res) => {
     }
 }
 
+exports.gen_pdf2 = async (req, res) => {
+    try {
+		const response = await axios.post("gen_pdf", req.body);
+		res.status(200).json(response);
+	} catch (err) {
+        console.log(err)
+		res.status(500).json({ message: err });
+	}
+}
+
 exports.gen_pdf = (req, res) => {
     let options = { format: 'A4' };
     htmlpdf.create(req.body.html, req.body.options).toBuffer(function(err, pdfBuffer){
         // if(err){
         //     console.log(err)
         // }
+        console.log(err)
         try {
             
             const blob = bucket.file(`${req.body.path}`);
