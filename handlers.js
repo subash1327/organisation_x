@@ -3,7 +3,7 @@ let Country = require('country-state-city').Country;
 let State = require('country-state-city').State;
 let City = require('country-state-city').City;
 
-const htmlpdf = require('html-pdf-node')
+const htmlpdf = require('html-pdf')
 const nodemailer = require('nodemailer')
 const Storage = require('@google-cloud/storage').Storage;
 const storage = new Storage();
@@ -339,7 +339,7 @@ exports.upload = (req, res) => {
 
 exports.gen_pdf = (req, res) => {
     let options = { format: 'A4' };
-    htmlpdf.generatePdf({content: req.body.html}, options).then(function(pdfBuffer){
+    htmlpdf.create(req.body.html, req.body.options).toBuffer(function(err, pdfBuffer){
         // if(err){
         //     console.log(err)
         // }
